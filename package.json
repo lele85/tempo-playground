@@ -1,0 +1,25 @@
+{
+  "name": "tempo-playground",
+  "version": "0.0.1",
+  "description": "This is a playground for grafana tempo.",
+  "main": "app/index.js",
+  "dependencies": {
+    "@opentelemetry/api": "^0.18.1",
+    "@opentelemetry/exporter-zipkin": "^0.18.2",
+    "@opentelemetry/tracing": "^0.18.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lele85/tempo-playground.git"
+  },
+  "author": "emanuele.rampichini@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lele85/tempo-playground/issues"
+  },
+  "homepage": "https://github.com/lele85/tempo-playground#readme"
+}
