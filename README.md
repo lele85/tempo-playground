@@ -1,6 +1,6 @@
 # Grafana Tempo Minimal Example
 
-This is a playground. In this simple configuration we have a single binary tempo running locally with S3 storage (provided by minio).
+This is a playground for grafana tempo. In this configuration we have a single binary tempo running locally with S3 storage (provided by minio).
 
 How to start:
 
