@@ -1,0 +1,41 @@
+version: "2"
+services:
+
+  tempo:
+    image: grafana/tempo:latest
+    entrypoint:
+      - sh
+      - -euc
+      - sleep 5 && /tempo -config.file=/etc/tempo.yaml
+    volumes:
+      - ./etc/tempo-s3-minio.yaml:/etc/tempo.yaml
+      - ./example-data/tempo:/tmp/tempo
+    ports:
+      - "9411:9411"  # zipkin
+      - "3100:3100"  # tempo
+    depends_on: 
+      - minio
+
+  minio:
+    image: minio/minio:RELEASE.2020-07-27T18-37-02Z
+    environment:
+      - MINIO_ACCESS_KEY=tempo
+      - MINIO_SECRET_KEY=supersecret
+    ports:
+      - "9000:9000"
+    entrypoint:
+      - sh
+      - -euc
+      - mkdir -p /data/tempo && /usr/bin/minio server /data
+
+  grafana:
+    image: grafana/grafana:7.5.1
+    volumes:
+      - ./example-data/datasources:/etc/grafana/provisioning/datasources
+      - ./example-data/dashboards-provisioning:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3000:3000"
