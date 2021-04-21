@@ -12,6 +12,10 @@ provider.register();
 
 const tracer = opentelemetry.trace.getTracer('default');
 
+const rand = () => {
+    return Math.round(Math.random() * 100);
+}
+
 const sleep = (ms)  => {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -31,18 +35,37 @@ async function doWork(ms, ctx) {
 }
 
 (async function() {
-    const span = tracer.startSpan('main');
-    const ctx = opentelemetry.setSpan(opentelemetry.context.active(), span);
+    const root = tracer.startSpan('main');
+    let ctx = opentelemetry.setSpan(opentelemetry.context.active(), root);
 
-    await doWork(10, ctx);
-    await doWork(20, ctx);
-    await doWork(30, ctx)
+    const waterfall = tracer.startSpan("waterfall", {}, ctx);
+    ctx = opentelemetry.setSpan(opentelemetry.context.active(), waterfall);
+    await doWork(rand(), ctx);
+    await doWork(rand(), ctx);
+    await doWork(rand(), ctx);
+    waterfall.end();
+
+    ctx = opentelemetry.setSpan(opentelemetry.context.active(), root);
+    const parallel = tracer.startSpan("parallel", {}, ctx);
+    ctx = opentelemetry.setSpan(opentelemetry.context.active(), parallel);
     await Promise.all([
-        doWork(40,ctx),
-        doWork(50,ctx),
-        doWork(60,ctx)
-    ])
-    span.end();
+        doWork(rand(), ctx),
+        doWork(rand(), ctx),
+        doWork(rand(), ctx)
+    ]);
+    parallel.end();
+    
+    ctx = opentelemetry.setSpan(opentelemetry.context.active(), root);
+    const race = tracer.startSpan("race", {}, ctx);
+    ctx = opentelemetry.setSpan(opentelemetry.context.active(), race);
+    await Promise.race([
+        doWork(rand(), ctx),
+        doWork(rand(), ctx),
+        doWork(rand(), ctx)
+    ]);
+    race.end();
+
+    root.end();
 
     await exporterConsole.shutdown();
     await exporterZipkin.shutdown();
