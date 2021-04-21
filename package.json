@@ -5,7 +5,10 @@
   "main": "app/index.js",
   "dependencies": {
     "@opentelemetry/api": "^0.18.1",
+    "@opentelemetry/context-async-hooks": "^0.18.2",
     "@opentelemetry/exporter-zipkin": "^0.18.2",
+    "@opentelemetry/instrumentation": "^0.18.2",
+    "@opentelemetry/node": "^0.18.2",
     "@opentelemetry/tracing": "^0.18.2"
   },
   "devDependencies": {},
