@@ -21,7 +21,11 @@ const sleep = (ms)  => {
 }
 
 async function doWork(ms, ctx) {
-    const span = tracer.startSpan(`doWork${ms}`,{}, ctx);
+    const span = tracer.startSpan(`doWork`,{
+        attributes: {
+            duration: ms
+        }
+    }, ctx);
     await sleep(ms);
     span.end();
 }
