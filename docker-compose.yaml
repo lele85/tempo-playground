@@ -2,7 +2,7 @@ version: "2"
 services:
 
   tempo:
-    image: grafana/tempo:latest
+    image: grafana/tempo:1.0.0
     entrypoint:
       - sh
       - -euc
@@ -29,7 +29,7 @@ services:
       - mkdir -p /data/tempo && /usr/bin/minio server /data
 
   grafana:
-    image: grafana/grafana:7.5.1
+    image: grafana/grafana:8.0.1
     volumes:
       - ./example-data/datasources:/etc/grafana/provisioning/datasources
       - ./example-data/dashboards-provisioning:/etc/grafana/provisioning/dashboards
